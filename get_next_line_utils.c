@@ -5,54 +5,70 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mchaaibi <mchaaibi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 16:35:24 by mchaaibi          #+#    #+#             */
-/*   Updated: 2023/01/24 14:09:40 by mchaaibi         ###   ########.fr       */
+/*   Created: 2023/06/09 10:11:21 by mchaaibi          #+#    #+#             */
+/*   Updated: 2023/06/11 20:23:06 by mchaaibi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+char	*read_ln(char *str, int fd)
 {
-	size_t	i;
+	char	*buffer;
+	int		i;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*str;
-	size_t	len;
-	size_t	j;
-
-	if (s1 == NULL)
-	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		s1[0] = '\0';
-	}
-	len = ft_strlen(s1)+ ft_strlen(s2);
-	str = (char *)malloc(len + 1 * sizeof(char));
-	if (str == NULL)
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
-	len = -1;
-	while (s1[++len])
-		str[len] = s1[len];
-	j = 0;
-	while (s2[j])
+	i = 1;
+	while (!ftstrchr (str, '\n') && i != 0)
 	{
-		str[len++] = s2[j++];
+		i = read(fd, buffer, BUFFER_SIZE);
+		if (i == -1)
+		{
+			free(buffer);
+			free(str);
+			str = NULL;
+			return (NULL);
+		}
+		buffer[i] = '\0';
+		str = ftjoin(str, buffer);
 	}
-	str[len] = '\0';
-	free(s1);
+	free(buffer);
 	return (str);
 }
 
-char	*ft_strchr(char *s, int c)
+char	*chyataline(char *st)
 {
-	int	i;
+	char	*line;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (st[i] != '\n' && st[i] != '\0')
+		i++;
+	if (ft_strlen(st) == i)
+	{
+		free(st);
+		return (NULL);
+	}
+	line = (char *)malloc((ft_strlen(st) - i + 1) * sizeof(char));
+	if (!line)
+		return (NULL);
+	while (st[i++])
+	{
+		line[j] = st[i];
+		j++;
+	}
+	line[j] = '\0';
+	free(st);
+	return (line);
+}
+
+char	*ftstrchr(const char *s, int c)
+{
+	int		i;
 
 	i = 0;
 	if (!s)
@@ -66,4 +82,46 @@ char	*ft_strchr(char *s, int c)
 	if (s[i] == (char)c)
 		return ((char *)&s[i]);
 	return (NULL);
+}
+
+void	ftjoin2(char *char1, char *char2, char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (char1[i] != '\0')
+	{
+		str[i] = char1[i];
+		i++;
+	}
+	while (char2[j])
+	{
+		str[i] = char2[j];
+		i++;
+		j++;
+	}
+	str[ft_strlen(char1) + ft_strlen(char2)] = '\0';
+	free(char1);
+}
+
+char	*ftjoin(char *char1, char *char2)
+{
+	char	*str;
+
+	if (!char1)
+	{
+		char1 = (char *)malloc(sizeof(char));
+		if (!char1)
+			return (NULL);
+		char1[0] = '\0';
+	}
+	if (!char2)
+		return (NULL);
+	str = malloc(sizeof(char) * ((ft_strlen(char1) + ft_strlen(char2)) + 1));
+	if (!str)
+		return (NULL);
+	ftjoin2(char1, char2, str);
+	return (str);
 }

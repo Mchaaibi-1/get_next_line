@@ -5,13 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mchaaibi <mchaaibi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 14:09:15 by mchaaibi          #+#    #+#             */
-/*   Updated: 2023/01/24 14:09:19 by mchaaibi         ###   ########.fr       */
+/*   Created: 2023/06/11 19:11:38 by mchaaibi          #+#    #+#             */
+/*   Updated: 2023/06/11 20:21:51 by mchaaibi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1337
+
+# endif
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -19,19 +24,11 @@
 # include <stdio.h>
 # include <limits.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-
-# endif
-
 char	*get_next_line(int fd);
-char	*ft_strchr(char *s, int c);
-size_t	ft_strlen(const char *s);
-char	*ft_strjoin(char *s1, char	*s2);
-char	*ft_read_line(char	*s, int fd);
-char	*ft_stpcpy(char *dst, const char *src);
-char	*ft_search(char *s);
-char	*new_es(char *s);
-char	*get_next_line(int fd);
+char	*ftstrchr(const char *s, int c);
+int		ft_strlen(char *str);
+char	*ftjoin(char *char1, char *char2);
+char	*chyataline(char *st);
+char	*read_ln(char *str, int fd);
 
 #endif
